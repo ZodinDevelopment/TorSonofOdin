@@ -1,0 +1,52 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+    {% if title %}{{ title }} - Ryse{% else %}TorSonofOdin - Ryse{% endif %}
+{% endblock %}
+
+{% block styles %}
+{{ super() }}
+{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="{{ url_for('index') }}">Ryse</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                {% if current_user.is_anonymous %}
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                <li><a href="{{ url_for('register') }}">Register</a></li>
+                {% else %}
+                <li><a href="{{ url_for('eyewitness') }}">Field Footage</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">User Area
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url_for('user', username=current_user.username) }}">My Profile</a></li>
+                        <li><a href="{{ url_for('videos', username=current_user.username) }}">My Videos</a></li>
+                        <li><a href="{{ url_for('edit_profile') }}">Edit Profile</a></li>
+                    </ul>
+                </li>
+                <li><a class="btn btn-danger navbar-btn" href="{{ url_for('logout') }}">Logout</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-info" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block app_content %}{% endblock %}
+</div>
+{% endblock %}
